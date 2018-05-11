@@ -18,7 +18,8 @@ public class MessageResource {
 
 	@GET
 	// @Produces(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.APPLICATION_XML)
+	//@Produces(MediaType.APPLICATION_XML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> getMessages() {
 		return messageService.getAllMessage();
 	}
