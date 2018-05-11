@@ -13,8 +13,8 @@ public class MessageService {
 
 
 	public MessageService() {
-		messages.put(1L, new Message(1,"Hello World!","Koushik"));
-		messages.put(2L, new Message(2,"Hello Jersy!","Koushik"));
+		//messages.put(1L, new Message(1,"Hello World!","Koushik"));
+		//messages.put(2L, new Message(2,"Hello Jersy!","Koushik"));
 	}
 
 	public List<Message> getAllMessage() {
@@ -43,6 +43,7 @@ public class MessageService {
 			return null;
 		}
 		messages.put(msg.getId(), msg);
+		
 		return msg;	
 	}
 	
