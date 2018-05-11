@@ -2,6 +2,7 @@ package org.koushik.javabrains.JAX_RS.resources;
 
 import java.util.List;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.koushik.javabrains.JAX_RS.beans.MessageFilterBean;
 import org.koushik.javabrains.JAX_RS.model.Message;
 import org.koushik.javabrains.JAX_RS.service.MessageService;
 
@@ -26,13 +28,12 @@ public class MessageResource {
 	@GET
 	// @Produces(MediaType.TEXT_PLAIN)
 	//@Produces(MediaType.APPLICATION_XML)
-	public List<Message> getMessages(@QueryParam("year") int year, 
-			@QueryParam("start")int start, @QueryParam("size")int size) {
-		if(start>0 && size>=0){
-			return messageService.getAllMessagesPaginated(start, size);
+	public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
+		if(filterBean.getStart()>0 && filterBean.getSize()>=0){
+			return messageService.getAllMessagesPaginated(filterBean.getStart(), filterBean.getSize());
 		}
-		if(year >0){
-			return messageService.getAllMessageForYear(year);
+		if(filterBean.getYear() >0){
+			return messageService.getAllMessageForYear(filterBean.getYear());
 		}
 		return messageService.getAllMessage();
 	}
