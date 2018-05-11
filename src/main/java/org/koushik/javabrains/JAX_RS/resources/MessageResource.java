@@ -68,6 +68,17 @@ public class MessageResource {
 		return messageService.getMessage(id);
 	}
 	
+	@GET
+	@Path("/{messageId}/comments")
+	public CommentResource getCommentResource(){
+		return new CommentResource();
+	}
 	
-
+	/*@GET
+	@Path("/{messageId}/comments")
+	public CommentResourceTest getCommentResource(){
+		return new CommentResourceTest();
+	}*/
+	
+	
 }
