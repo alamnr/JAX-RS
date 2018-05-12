@@ -88,6 +88,8 @@ public class MessageResource {
 			@Context UriInfo uriInfo) throws Exception {
 		Message msg = messageService.getMessage(id);
 		msg.addLinkToList(getUriForSelf(uriInfo, msg), "self");
+		msg.addLinkToList(getUriForProfile(uriInfo, msg), "profile");
+		msg.addLinkToList(getUriForComments(uriInfo, msg), "comments");
 		return msg;
 	}
 
@@ -98,6 +100,25 @@ public class MessageResource {
 							.build().toString();
 		return uri;
 	}
+	
+	private String getUriForProfile(UriInfo uriInfo, Message msg) {
+		String uri = uriInfo.getBaseUriBuilder()
+							.path(ProfileResource.class)
+							.path(msg.getAuthor())
+							.build().toString();
+		return uri;
+	}
+	
+	private String getUriForComments(UriInfo uriInfo, Message msg) {
+		String uri = uriInfo.getBaseUriBuilder()
+							.path(MessageResource.class)
+							.path(MessageResource.class, "getCommentResource")
+							.path(CommentResource.class)
+							.resolveTemplate("messageId", msg.getId())
+							.build().toString();
+		return uri;
+	}
+	
 	
 	@GET
 	@Path("/{messageId}/comments")
