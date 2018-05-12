@@ -27,6 +27,7 @@ import org.koushik.javabrains.JAX_RS.service.MessageService;
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+//@Produces(value={MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
 public class MessageResource {
 
 	MessageService messageService = new MessageService();
@@ -34,7 +35,9 @@ public class MessageResource {
 	@GET
 	// @Produces(MediaType.TEXT_PLAIN)
 	//@Produces(MediaType.APPLICATION_XML)
-	public List<Message> getMessages(@BeanParam MessageFilterBean filterBean) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Message> getJSONMessages(@BeanParam MessageFilterBean filterBean) {
+		System.out.println("JSON Method called");
 		if(filterBean.getStart()>0 && filterBean.getSize()>=0){
 			return messageService.getAllMessagesPaginated(filterBean.getStart(), filterBean.getSize());
 		}
@@ -43,6 +46,20 @@ public class MessageResource {
 		}
 		return messageService.getAllMessage();
 	}
+	
+	@GET
+	@Produces(MediaType.TEXT_XML)
+	public List<Message> getXMLMessages(@BeanParam MessageFilterBean filterBean) {
+		System.out.println("XML Method called");
+		if(filterBean.getStart()>0 && filterBean.getSize()>=0){
+			return messageService.getAllMessagesPaginated(filterBean.getStart(), filterBean.getSize());
+		}
+		if(filterBean.getYear() >0){
+			return messageService.getAllMessageForYear(filterBean.getYear());
+		}
+		return messageService.getAllMessage();
+	}
+	
 	
 	/*@POST
 	public Message addMessage(Message msg) {
