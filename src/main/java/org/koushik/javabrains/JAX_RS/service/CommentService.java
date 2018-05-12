@@ -5,10 +5,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.koushik.javabrains.JAX_RS.database.DatabaseClass;
 import org.koushik.javabrains.JAX_RS.model.Comment;
+import org.koushik.javabrains.JAX_RS.model.ErrorMessage;
 import org.koushik.javabrains.JAX_RS.model.Message;
 
 public class CommentService {
@@ -24,7 +28,22 @@ public class CommentService {
 	}
 	
 	public Comment getComment(long messageId,long commentId){
+		ErrorMessage ErrorMessage = new ErrorMessage("Not Found",404,"http://javabrain.koushik.org");
+		Response response=  Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(ErrorMessage).build();
+		
+		Message msg= messages.get(messageId);
+		if(msg==null)
+		{
+			
+			throw new WebApplicationException(response);
+		}
 		Map<Long,Comment> comments = messages.get(messageId).getComments();
+		Comment comment = comments.get(commentId);
+		if(comment == null){
+			//throw new WebApplicationException(response);
+			throw new NotFoundException(response);
+		}
 		return comments.get(commentId);
 	}
 	
