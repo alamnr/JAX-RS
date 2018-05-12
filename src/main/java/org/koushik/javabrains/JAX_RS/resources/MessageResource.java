@@ -1,5 +1,7 @@
 package org.koushik.javabrains.JAX_RS.resources;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.ws.rs.BeanParam;
@@ -12,7 +14,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.koushik.javabrains.JAX_RS.beans.MessageFilterBean;
 import org.koushik.javabrains.JAX_RS.model.Message;
@@ -38,10 +44,25 @@ public class MessageResource {
 		return messageService.getAllMessage();
 	}
 	
-	@POST
+	/*@POST
 	public Message addMessage(Message msg) {
 		
 		return messageService.addMessage(msg);
+	}*/
+	
+	@POST
+	public Response addMessage(Message msg, @Context UriInfo uriInfo) throws URISyntaxException {
+		Message newMessage = messageService.addMessage(msg);
+		/*return  Response.status(Status.CREATED)
+				.entity(newMessage)
+				.build(); */
+		String id = String.valueOf(newMessage.getId());
+		URI uri = uriInfo.getAbsolutePathBuilder().path(id).build();
+		return Response.created(uri)
+				//.created(new URI("/JAX-RS/webapi/messages/"+newMessage.getId()))
+				.entity(newMessage)
+				.build();
+		
 	}
 	
 	@PUT
