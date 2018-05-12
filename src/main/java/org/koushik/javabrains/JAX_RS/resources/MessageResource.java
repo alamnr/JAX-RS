@@ -83,10 +83,20 @@ public class MessageResource {
 
 	@GET
 	@Path("/{messageId}")
-	@Produces(MediaType.APPLICATION_XML)
-	public Message getMessage(@PathParam("messageId") long id) {
-		
-		return messageService.getMessage(id);
+	//@Produces(MediaType.APPLICATION_XML)
+	public Message getMessage(@PathParam("messageId") long id, 
+			@Context UriInfo uriInfo) throws Exception {
+		Message msg = messageService.getMessage(id);
+		msg.addLinkToList(getUriForSelf(uriInfo, msg), "self");
+		return msg;
+	}
+
+	private String getUriForSelf(UriInfo uriInfo, Message msg) {
+		String uri = uriInfo.getBaseUriBuilder()
+							.path(MessageResource.class)
+							.path(Long.toString(msg.getId()))
+							.build().toString();
+		return uri;
 	}
 	
 	@GET
